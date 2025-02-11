@@ -12,3 +12,7 @@ entries:
   - term: read replica
     general_definition: |-
       a read replica is an “almost up-to-date” copy of the primary database instance which only serve read requests. There may be multiple read replicas for a single primary database instance.
+
+  - term: replica lag
+    general_definition: |-
+      the difference between the primary database instance and a read replica.
