@@ -9,7 +9,7 @@ sidebar:
 
 import { PackageManagers, WranglerConfig } from "~/components";
 
-You can now automatically provision Cloudflare resources as part of your deployment.  Without this, you need to separately manually create any resouces that do not yet exist on your account prior to deploying. 
+You can now automatically provision Cloudflare resources as part of your deployment.  You no longer need to manually create any resources that do not yet exist on your account prior to deploying. 
 
 With resource provisioning, if your Wrangler configuration file includes a [KV namespace](/kv/), [D1 database](/d1/), or [R2 bucket](/r2/) that does not yet exist, Wrangler will create these resources upon deployment. This is done by adding the experimental `-–x-provision` flag to your commands. 
 
