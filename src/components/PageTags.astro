@@ -7,28 +7,25 @@ import { tagsValues } from "~/schemas/tags";
 type Props = z.infer<typeof props>;
 
 const props = z.object({
-	tags: z.enum(tagsValues).array().optional(),
+	tags: z
+		.array(z.string())
+		.optional()
+		.transform((tags) => {
+			if (tags) {
+				// Only keep values that are in tagsValues
+				return tags.filter((tag) => tagsValues.includes(tag));
+			}
+			return [];
+		}),
 });
 
-const parsedValues = props.safeParse(Astro.props);
-let tagPlaceholder: Array<String>;
-
-if (!parsedValues.success) {
-	// handle error then return
-	tagPlaceholder = [];
-} else {
-	// do something
-	tagPlaceholder = parsedValues.data.tags;
-}
-
-const tags = tagPlaceholder;
-console.log(tagPlaceholder);
-console.log(parsedValues);
+const { tags } = props.parse(Astro.props);
 ---
 
 {
 	tags && (
 		<div class="flex flex-row gap-2">
+			<strong>Page tags:</strong>
 			{tags.map((tag) => (
 				<a href={`/search/?tag=${tag}`} class="no-underline">
 					<Badge text={tag} variant="tip" />

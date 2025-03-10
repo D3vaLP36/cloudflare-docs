@@ -2,10 +2,11 @@
 import Default from "@astrojs/starlight/components/Head.astro";
 import { differenceInCalendarDays } from "date-fns";
 import "tippy.js/dist/tippy.css";
-
+import { z } from "astro:schema";
 import { getEntry } from "astro:content";
 import { getOgImage } from "~/util/og";
 import type { CollectionEntry } from "astro:content";
+import { tagsValues } from "~/schemas/tags";
 
 // grab the current top-level folder. Remove . characters for 1.1.1.1 URL
 const currentSection = Astro.url.pathname.split("/")[1].replaceAll(".", "");
@@ -139,12 +140,27 @@ if (Astro.locals.starlightRoute.entry.data.products) {
 
 // other products
 if (Astro.locals.starlightRoute.entry.data.tags) {
-	const pageTags = Astro.locals.starlightRoute.entry.data.tags;
+	type Props = z.infer<typeof props>;
+
+	const props = z.object({
+		tags: z
+			.array(z.string())
+			.optional()
+			.transform((tags) => {
+				if (tags) {
+					// Only keep values that are in tagsValues
+					return tags.filter((tag) => tagsValues.includes(tag));
+				}
+				return [];
+			}),
+	});
+
+	const { tags } = props.parse(Astro.locals.starlightRoute.entry.data);
 	head.push({
 		tag: "meta",
 		attrs: {
 			name: "pcx_tags",
-			content: pageTags.toString(),
+			content: tags.toString(),
 		},
 		content: "",
 	});
