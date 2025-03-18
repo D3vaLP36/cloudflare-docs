@@ -52,23 +52,25 @@ const groups = [
 ];
 ---
 
-{
-	groups.map((group) => (
-		<div>
-			<p class="text-xs font-medium uppercase">{group.heading}</p>
-			<p class="mt-1 text-sm">{group.description}</p>
-			<ul class="mt-4 list-none pl-0">
-				{group.links.map((item) => (
-					<li>
-						<a
-							href={item.href}
-							class="text-sm font-medium !text-black no-underline"
-						>
-							{item.label}
-						</a>
-					</li>
-				))}
-			</ul>
-		</div>
-	))
-}
+<div class="not-content grid grid-cols-1 gap-8 md:grid-cols-3">
+	{
+		groups.map((group) => (
+			<div>
+				<p class="text-xs font-medium uppercase">{group.heading}</p>
+				<p class="mt-1 text-sm">{group.description}</p>
+				<ul class="mt-4 list-none pl-0">
+					{group.links.map((item) => (
+						<li>
+							<a
+								href={item.href}
+								class="text-sm font-medium !text-black no-underline"
+							>
+								{item.label}
+							</a>
+						</li>
+					))}
+				</ul>
+			</div>
+		))
+	}
+</div>

@@ -8,7 +8,6 @@ import TopCards from "~/components/homepage/TopCards.astro";
 import GetStarted from "~/components/homepage/GetStarted.astro";
 import BuildWithCloudflare from "~/components/homepage/BuildWithCloudflare.astro";
 import BottomLinks from "~/components/homepage/BottomLinks.astro";
-import Offerings from "~/components/homepage/Offerings.astro";
 import OfferingsTabs from "~/components/homepage/OfferingsTabs.tsx";
 import Changelog from "~/components/homepage/Changelog.astro";
 
@@ -26,24 +25,14 @@ const props = {
 <StarlightPage {...props}>
 	<div class="space-y-16">
 		<Hero />
-		<div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-			<TopCards />
-		</div>
-		<div class="flex flex-col items-center justify-center gap-10">
+		<TopCards />
+		<div>
 			<OfferingsTabs client:load />
 		</div>
-		<div class="flex flex-col items-center justify-center gap-10">
-			<GetStarted />
-		</div>
-		<div class="flex w-full flex-col gap-10">
-			<BuildWithCloudflare />
-		</div>
-		<div class="flex flex-col items-center justify-center gap-10">
-			<Changelog />
-		</div>
-		<div class="not-content grid grid-cols-1 gap-8 md:grid-cols-3">
-			<BottomLinks />
-		</div>
+		<GetStarted />
+		<BuildWithCloudflare />
+		<Changelog />
+		<BottomLinks />
 	</div>
 </StarlightPage>
 

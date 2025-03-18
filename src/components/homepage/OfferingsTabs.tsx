@@ -1,5 +1,5 @@
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import MapSvg from "~/assets/network-map.svg?raw";
+import MapImg from "~/assets/network-map.png";
 
 const tabs = ["Overview", "Connect & Protect", "Build"];
 
@@ -62,70 +62,105 @@ const connectCards = [
 	},
 ] as const;
 
+function OverviewPanel() {
+	return (
+		<div className="flex items-center justify-center gap-6 p-6">
+			<img
+				className="hidden h-auto w-1/2 md:block"
+				src={MapImg.src}
+				width={MapImg.width}
+				height={MapImg.height}
+			/>
+			<div>
+				<div>
+					<p className="text-xl font-semibold">What is Cloudflare?</p>
+					<p>
+						Connect to or build on top of Cloudflare’s global network to speed
+						up and protect your apps, employees, and networks.
+					</p>
+				</div>
+				<div className="flex gap-4">
+					<a
+						href="https://dash.cloudflare.com/login"
+						className="text-black no-underline"
+					>
+						Sign up
+					</a>
+					<a href="/fundamentals/" className="text-black no-underline">
+						Learn more
+					</a>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+function ConnectPanel() {
+	return (
+		<div className="flex flex-col gap-4 p-6">
+			<p className="text-center text-xl font-semibold">
+				Secure and accelerate anything connected to Cloudflare.
+			</p>
+			<div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+				{connectCards.map((card) => (
+					<div
+						key={card.label}
+						className="flex flex-col items-center gap-4 rounded border p-6 shadow-sm"
+					>
+						<div className="text-center">
+							<p className="font-semibold">{card.label}</p>
+							<p>{card.description}</p>
+						</div>
+						<a
+							href={card.cta.primary.href}
+							className="mt-auto block min-w-16 text-nowrap rounded border border-cl1-brand-orange px-6 text-black no-underline"
+						>
+							{card.cta.primary.label}
+						</a>
+						<a
+							href={card.cta.secondary.href}
+							className="block min-w-16 text-nowrap px-6 text-black no-underline"
+						>
+							{card.cta.secondary.label}
+						</a>
+					</div>
+				))}
+			</div>
+		</div>
+	);
+}
+
+function BuildPanel() {
+	return <p>BuildPanel</p>;
+}
+
+const panels = [OverviewPanel, ConnectPanel, BuildPanel];
+
 export default function OfferingsTabs() {
 	return (
-		<Tabs className="not-content w-full shadow-md">
-			<TabList className="grid list-none grid-cols-3 gap-2 pl-0 text-center">
-				{tabs.map((tab, index) => (
-					<Tab
-						key={index}
-						className="h-14 rounded-t border-l border-r border-t p-4 font-semibold"
-					>
-						{tab}
-					</Tab>
-				))}
-			</TabList>
+		<div className="flex flex-col items-center justify-center gap-10">
+			<h2>Explore Cloudflare offerings</h2>
+			<Tabs className="not-content w-full shadow-md">
+				<TabList className="-mb-[1px] grid list-none grid-cols-3 gap-2 pl-0 text-center">
+					{tabs.map((tab, index) => (
+						<Tab
+							key={index}
+							className="cursor-pointer select-none rounded-t border-l border-r border-t bg-cl1-gray-9 p-4 font-semibold text-cl1-gray-4"
+							selectedClassName="!bg-white !text-black"
+						>
+							{tab}
+						</Tab>
+					))}
+				</TabList>
 
-			<TabPanel>
-				<div className="flex items-center justify-center gap-6">
-					<div dangerouslySetInnerHTML={{ __html: MapSvg }} />
-					<div>
-						<div>
-							<p className="text-xl font-semibold">What is Cloudflare?</p>
-							<p>
-								Connect to or build on top of Cloudflare’s global network to
-								speed up and protect your apps, employees, and networks.
-							</p>
+				{panels.map((Panel) => (
+					<TabPanel>
+						<div className="border">
+							<Panel />
 						</div>
-						<div className="flex gap-4">
-							<a href="https://dash.cloudflare.com/login">Sign up</a>
-							<a href="/fundamentals/">Learn more</a>
-						</div>
-					</div>
-				</div>
-			</TabPanel>
-			<TabPanel className="p-6">
-				<div className="flex flex-col gap-4">
-					<p className="text-center text-xl font-semibold">
-						Secure and accelerate anything connected to Cloudflare.
-					</p>
-					<div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-						{connectCards.map((card) => (
-							<div className="flex flex-col items-center gap-4 rounded border p-6 shadow-sm">
-								<div className="text-center">
-									<p className="font-semibold">{card.label}</p>
-									<p>{card.description}</p>
-								</div>
-								<a
-									href={card.cta.primary.href}
-									className="mt-auto block min-w-16 text-nowrap rounded border border-cl1-brand-orange px-6"
-								>
-									{card.cta.primary.label}
-								</a>
-								<a
-									href={card.cta.secondary.href}
-									className="block min-w-16 text-nowrap px-6"
-								>
-									{card.cta.secondary.label}
-								</a>
-							</div>
-						))}
-					</div>
-				</div>
-			</TabPanel>
-			<TabPanel>
-				<p>Content for Tab 3</p>
-			</TabPanel>
-		</Tabs>
+					</TabPanel>
+				))}
+			</Tabs>
+		</div>
 	);
 }
