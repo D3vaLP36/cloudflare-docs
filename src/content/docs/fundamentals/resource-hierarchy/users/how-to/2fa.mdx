@@ -1,22 +1,23 @@
 ---
 title: Two-factor authentication
 pcx_content_type: how-to
-
+sidebar:
+  order: 3
 ---
 
-import { Render } from "~/components"
+import { Render } from "~/components";
 
 ## Overview
 
 <Render file="2fa-overview" product="support" />
 
-***
+---
 
 ## Enable two-factor authentication for your Cloudflare account
 
 <Render file="2fa-enable" product="support" />
 
-***
+---
 
 ## Configure security key authentication for two-factor Cloudflare login
 
@@ -55,7 +56,7 @@ Ensure that your hardware security key is configured and plugged in. On a Window
 7. Select **Download**, **Print**, or **Copy** to save your backup codes in a secure location.
 8. Select **Next** to finish the configuration. 
 
-***
+---
 
 ## Configure TOTP mobile application authentication for two-factor Cloudflare login
 
@@ -87,7 +88,7 @@ Reconfiguring TOTP mobile application authentication does not turn off 2FA.
 
 To reconfigure, follow [Steps 1-7](/fundamentals/setup/account/account-security/2fa/#configure-totp-mobile-application-authentication-for-two-factor-cloudflare-login) as detailed above.
 
-***
+---
 
 ## Regenerate backup codes
 
@@ -103,7 +104,7 @@ Regenerating your backup codes will invalidate your previous codes.
 3. Select **Authentication**.
 4. Select **Regenerate** to generate and save a new set of two-factor backup codes.
 
-***
+---
 
 ## Disable two-factor authentication for your Cloudflare account
 
@@ -133,21 +134,21 @@ If you are not the Super Administrator of an organization with **2FA Enforcement
 
 ![how to disable your TOTP mobile application authentication.](https://developerdocsgifs.cloudflaretraining.com/resampled_5fps_disable_mobile_auth_v2_final.gif)
 
-***
+---
 
 ## Use a backup code
 
 If you lose access to a mobile device, security key, or authentication code, you can solve these issues by using a backup code or retrieving a backup code from your preferred authentication app.
 
-Refer to Google's documentation to [transfer Google Authenticator codes from one Android device to another](https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid\&hl=en\&oco=0).
+Refer to Google's documentation to [transfer Google Authenticator codes from one Android device to another](https://support.google.com/accounts/answer/1066447?co=GENIE.Platform%3DAndroid&hl=en&oco=0).
 
 When setting up 2FA, you should have saved your backup codes in a secure location. To restore lost access using a Cloudflare backup code:
 
 1. Retrieve the backup code from where you stored it.
 2. Go to the [Cloudflare login page](https://dash.cloudflare.com/login), enter your username and password and select **Log in**.
 3. You should see a page titled **Two-Factor Authentication**
-   * If it has a text box, enter one of your backup codes and select **Log in**.
-   * If instead you see "Insert your security key and touch it", cancel any prompts from your browser that appear and select **try another authentication method or backup code**. Proceed to enter one of your backup codes and select **Log in**.
+   - If it has a text box, enter one of your backup codes and select **Log in**.
+   - If instead you see "Insert your security key and touch it", cancel any prompts from your browser that appear and select **try another authentication method or backup code**. Proceed to enter one of your backup codes and select **Log in**.
 
 :::note
 
@@ -166,17 +167,17 @@ If you do not have access to your 2FA account or backup codes and cannot current
 6. Select **Verify device**. This checks whether you are using a device that has previously logged into your account.
 7. If you receive a "Device verification failed" message:
 
-   * If you clear your cookies often or are logging in from a different IP address, you have wiped Cloudflare's memory of your device and will need to use a different device to verify.
-   * For security reasons, you must wait three to five days after completing verification to receive your temporary access code.
-   * Your browser may be set to clear cookies on exit or after browser or OS upgrades. This interferes with the device verification process.
-   * You may be using anti-malware or other software that automatically clears your browser cookies and makes your device unregognizable by Cloudflare's Dashboard.
+   - If you clear your cookies often or are logging in from a different IP address, you have wiped Cloudflare's memory of your device and will need to use a different device to verify.
+   - For security reasons, you must wait three to five days after completing verification to receive your temporary access code.
+   - Your browser may be set to clear cookies on exit or after browser or OS upgrades. This interferes with the device verification process.
+   - You may be using anti-malware or other software that automatically clears your browser cookies and makes your device unregognizable by Cloudflare's Dashboard.
 
 If you are still unable to verify your device, follow the instructions shown in the recovery workflow.
 
-***
+---
 
 ## Related resources
 
-* [Google Authentication documentation](https://support.google.com/accounts/answer/1066447?hl=en\&ref_topic=2954345\&co=GENIE.Platform%3DiOS\&oco=0)
-* [YubiKey documentation](https://www.yubico.com/works-with-yubikey/catalog/cloudflare/)
-* [Set up multi-user accounts on Cloudflare](/fundamentals/setup/manage-members/)
+- [Google Authentication documentation](https://support.google.com/accounts/answer/1066447?hl=en&ref_topic=2954345&co=GENIE.Platform%3DiOS&oco=0)
+- [YubiKey documentation](https://www.yubico.com/works-with-yubikey/catalog/cloudflare/)
+- [Set up multi-user accounts on Cloudflare](/fundamentals/setup/manage-members/)
