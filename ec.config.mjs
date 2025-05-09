@@ -1,4 +1,6 @@
 // @ts-check
+import { defineEcConfig } from "astro-expressive-code";
+
 import darkTheme from "solarflare-theme/themes/cloudflare-dark-color-theme.json" with { type: "json" };
 import lightTheme from "solarflare-theme/themes/cloudflare-light-color-theme.json" with { type: "json" };
 
@@ -8,7 +10,7 @@ import pluginDefaultTitles from "./src/plugins/expressive-code/default-titles.js
 
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 
-export default {
+export default defineEcConfig({
 	plugins: [
 		pluginWorkersPlayground(),
 		pluginOutputFrame(),
@@ -17,6 +19,8 @@ export default {
 	],
 	themes: [darkTheme, lightTheme],
 	styleOverrides: {
+		borderWidth: "1px",
+		borderRadius: "0.25rem",
 		textMarkers: {
 			defaultLuminance: ["32%", "88%"],
 		},
@@ -24,4 +28,9 @@ export default {
 	frames: {
 		extractFileNameFromCode: false,
 	},
-};
+	shiki: {
+		langAlias: {
+			curl: "sh",
+		},
+	},
+});

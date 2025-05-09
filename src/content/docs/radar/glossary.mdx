@@ -2,7 +2,7 @@
 pcx_content_type: reference
 title: Glossary
 sidebar:
-  order: 7
+  order: 6
 
 ---
 
@@ -144,6 +144,10 @@ Note that prior to January 23, 2023, the IPv6 percentage shown in the chart was 
 The Internet Quality Index estimates connection performance under average utilization, such as web browsing. It is based on end user measurements against a fixed set of Cloudflare and third-party targets, providing numbers for bandwidth, round-trip time (latency), and DNS response time, aggregated by continent, country, or ASN.
 
 The IQI methodology requires a minimum number of measurements to generate estimates. As a result, graphs for smaller countries and ASNs may display occasional gaps, especially during nighttime. These gaps do not indicate outages. The number of measurements underlying IQI does not necessarily correlate with the volume of traffic observed by Cloudflare in a specific country or ASN.
+
+## Leaked credentials
+
+[Leaked credentials detection](/waf/detections/leaked-credentials/) scans incoming HTTP requests for known authentication patterns from common web apps and any custom detection locations that were configured. Cloudflare Radar provides visibility into aggregate trends in authentication requests, including the detection of leaked credentials.
 
 ## Mobile operating systems
 

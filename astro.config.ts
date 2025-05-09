@@ -1,6 +1,5 @@
 import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
-import tailwind from "@astrojs/tailwind";
 import starlightDocSearch from "@astrojs/starlight-docsearch";
 import starlightImageZoom from "starlight-image-zoom";
 import liveCode from "astro-live-code";
@@ -45,7 +44,8 @@ async function autogenStyles() {
 		})
 	)
 		.filter((x) => x.isFile())
-		.map((x) => x.parentPath + x.name);
+		.map((x) => x.parentPath + x.name)
+		.sort((a) => (a === "./src/styles/tailwind.css" ? -1 : 1));
 
 	return styles;
 }
@@ -69,6 +69,14 @@ export default defineConfig({
 			rehypeTitleFigure,
 		],
 	},
+	image: {
+		service: {
+			entrypoint: "astro/assets/services/sharp",
+			config: {
+				limitInputPixels: false,
+			},
+		},
+	},
 	experimental: {
 		contentIntellisense: true,
 	},
@@ -82,20 +90,19 @@ export default defineConfig({
 				src: "./src/assets/logo.svg",
 			},
 			favicon: "/favicon.png",
-			head: ["image", "og:image", "twitter:image"].map((name) => {
-				return {
-					tag: "meta",
-					attrs: {
-						name,
-						content: "https://developers.cloudflare.com/cf-twitter-card.png",
-					},
-				};
-			}),
-			social: {
-				github: "https://github.com/cloudflare/cloudflare-docs",
-				"x.com": "https://x.com/cloudflare",
-				youtube: "https://www.youtube.com/cloudflare",
-			},
+			social: [
+				{
+					label: "GitHub",
+					icon: "github",
+					href: "https://github.com/cloudflare/cloudflare-docs",
+				},
+				{ label: "X.com", icon: "x.com", href: "https://x.com/cloudflare" },
+				{
+					label: "YouTube",
+					icon: "youtube",
+					href: "https://www.youtube.com/cloudflare",
+				},
+			],
 			editLink: {
 				baseUrl:
 					"https://github.com/cloudflare/cloudflare-docs/edit/production/",
@@ -103,11 +110,11 @@ export default defineConfig({
 			components: {
 				Footer: "./src/components/overrides/Footer.astro",
 				Head: "./src/components/overrides/Head.astro",
+				Header: "./src/components/overrides/Header.astro",
 				Hero: "./src/components/overrides/Hero.astro",
 				MarkdownContent: "./src/components/overrides/MarkdownContent.astro",
 				Sidebar: "./src/components/overrides/Sidebar.astro",
 				PageTitle: "./src/components/overrides/PageTitle.astro",
-				SocialIcons: "./src/components/overrides/SocialIcons.astro",
 				TableOfContents: "./src/components/overrides/TableOfContents.astro",
 			},
 			sidebar,
@@ -122,12 +129,11 @@ export default defineConfig({
 								exclude: [
 									"/api/",
 									"/api/**",
-									"/changelog/",
+									"/changelog/**",
 									"/http/resources/**",
 									"{props.*}",
 									"/",
-									"**/glossary/?term=**",
-									"/products/?product-group=*",
+									"/glossary/",
 									"/products/",
 									"/rules/snippets/examples/?operation=*",
 									"/rules/transform/examples/?operation=*",
@@ -145,13 +151,11 @@ export default defineConfig({
 				starlightImageZoom(),
 			],
 			lastUpdated: true,
+			markdown: {
+				headingLinks: false,
+			},
 		}),
-		tailwind({
-			applyBaseStyles: false,
-		}),
-		liveCode({
-			layout: "~/components/live-code/Layout.astro",
-		}),
+		liveCode({}),
 		icon(),
 		sitemap({
 			filter(page) {
