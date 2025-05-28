@@ -65,7 +65,7 @@ If your traffic is onboarded using WARP, ensure that traffic to the following IP
 
 ### Route initial resolved IPs
 
-When users connect to a public hostname route, Gateway will assign an initial resolved IP from the `100.80.0.0/16` range to the DNS query. The initial resolved IP mechanism is required because Gateway's network engine operates at L3/L4 and can only see IPs (not hostnames) when processing the connection. If the packet's destination IP falls within the designated CGNAT range, Gateway will know that it corresponds to a hostname route and sends it down Cloudflare Tunnel.
+When users connect to a public hostname route, Gateway will assign an initial resolved IP from the `100.80.0.0/16` range to the DNS query. The initial resolved IP is required because Gateway's network engine operates at L3/L4 and can only see IPs (not hostnames) when processing the connection. If a packet's destination IP falls within the `100.80.0.0/16`, Gateway knows that the IP maps to a public hostname route and sends the traffic down the corresponding Cloudflare Tunnel.
 
 To route `100.80.0.0/16` through WARP:
 
