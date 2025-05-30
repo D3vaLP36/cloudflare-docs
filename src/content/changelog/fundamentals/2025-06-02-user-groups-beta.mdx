@@ -18,8 +18,12 @@ We're excited to announce the Public Beta launch of **User Groups for Cloudflare
 **SCIM User Groups [BETA]**: Centralize & simplify your user and group management at scale by syncing memberships directly from your upstream identity provider (like Okta or Entra ID) to the Cloudflare Platform. This ensures Cloudflare stays in sync with your source of truth, letting you apply Permission Policies to those synced groups directly within the Cloudflare Dashboard.
 
 
-> **Note:** SCIM Virtual Groups are deprecated as of 06/02/25. We recommend migrating SCIM Virtual Groups implementations to use SCIM User Groups.
+> **Note:** SCIM Virtual Groups are deprecated as of 06/02/25. We recommend migrating SCIM Virtual Groups implementations(identified by the pattern CF-<accountID>-<Role Name> in your IdP) to use SCIM User Groups.
 
+Note: "Virtual Groups" (or "Phase 1 user groups"), identified by the pattern CF-<accountID> - <Role Name>, are part of the deprecated method.
+
+
+Identified by the pattern CF-<accountID>-<Role Name>, are part of the deprecated method
 
 **Revamped Permission Policies UI [BETA]**: As Cloudflare's services have grown, so has the need for precise, role-based access control. We've given the Permission Policies builder a visual overhaul to make it much easier for administrators to find and define the exact permissions they want for specific principals.
 
