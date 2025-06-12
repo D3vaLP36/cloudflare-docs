@@ -5,13 +5,15 @@ sidebar:
   order: 6
 ---
 
-[Kubernetes](https://kubernetes.io/) is a container orchestration tool that helps deploy applications onto physical or virtual machines, scale the deployment, and push updates without downtime. The Kubernetes cluster, or environment, where the application instances are running is connected internally through a private network. You can install the `cloudflared` daemon inside of the Kubernetes cluster in order to connect the applications inside of the cluster to Cloudflare.
+[Kubernetes](https://kubernetes.io/) is a container orchestration tool that helps deploy applications onto physical or virtual machines, scale the deployment to meet traffic demands, and push updates without downtime. The Kubernetes cluster, or environment, where the application instances are running is connected internally through a private network. You can install the `cloudflared` daemon inside of the Kubernetes cluster in order to connect applications inside of the cluster to Cloudflare.
 
 ![placeholder](~/assets/images/cloudflare-one/connections/connect-apps/handshake.jpg)
 
-As shown in the diagram, `cloudflared` runs as an adjacent deployment to the application deployments. `cloudflared` runs a Cloudflare Tunnel using a token and gains access to the Internet through the Kubernetes ingress controller. Once the cluster is connected to Cloudflare, you can add tunnel routes to control how `cloudflared` will proxy traffic to your Kubernetes services. For example, you could publish your Kubernetes application to the Internet or provide access only to internal WARP client users. Just like with other Kubernetes deployments, Kubernetes can spin up multiple replicas of `cloudflared` to ensure availability when incoming trafic changes. For more information about scaling Cloudflare Tunnel, refer to [Tunnel availability and failover](/cloudflare-one/connections/connect-networks/configure-tunnels/tunnel-availability/).
+As shown in the diagram, we recommend setting up `cloudflared` as an adjacent deployment to the application deployments. Having a separate deployment for `cloudflared` allows you to scale `cloudflared` up or down independently of the application. When incoming traffic increases, Kubernetes can spin up [multiple replicas](/cloudflare-one/connections/connect-networks/configure-tunnels/tunnel-availability/) of `cloudflared` running the same Cloudflare Tunnel. Each `cloudflared` replica / pod can reach all Kubernetes services in the cluster -- there is no need to build a dedicated tunnel for each service.
 
-This tutorial will cover how to expose a Kubernetes service to the public Internet using `cloudflared`. For the purposes of this example, we will deploy a basic web application alongside `cloudflared` in Google Kubernetes Engine (GKE). The same principles apply to any other Kubernetes environment (such as `minikube` or `kubeadm`, or a cloud-based Kubernetes service) where `cloudflared` can connect to Cloudflare's network.
+Once the cluster is connected to Cloudflare, you can configure Cloudflare Zero Trust to control how `cloudflared` will proxy traffic to services within the cluster. For example, you may wish to publish certain Kubernetes application to the Internet and restrict other applications to internal WARP client users.
+
+This tutorial will cover how to expose a Kubernetes service to the public Internet using `cloudflared`. For the purposes of this example, we will deploy a basic web application alongside `cloudflared` in Google Kubernetes Engine (GKE). The same principles apply to any other Kubernetes environment (such as `minikube`, `kubeadm`, or a cloud-based Kubernetes service) where `cloudflared` can connect to Cloudflare's network.
 
 ## Create a tunnel
 
