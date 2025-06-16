@@ -209,64 +209,99 @@ Create a [Kubernetes secret](https://kubernetes.io/docs/concepts/configuration/s
 		tunnel-token   Opaque   1      100s
 		```
 
-## Create pods for cloudflared
+## 5. Create pods for cloudflared
 
-The tunnel can be created through the dashboard using [this guide](/cloudflare-one/connections/connect-networks/get-started/create-remote-tunnel/). Instead of running the command to install a connector you will select docker as the environment and copy just the token rather than the whole command. Configure the tunnel to route to k8.example.com from the service [http://web-service:80](http://web-service:80). Create the cloudflared-deployment.yml file with the following content.
+1. Create a Kubernetes deployment for a remotely-managed Cloudflare Tunnel:
 
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  labels:
-    app: cloudflared
-  name: cloudflared-deployment
-  namespace: default
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      pod: cloudflared
-  template:
-    metadata:
-      creationTimestamp: null
-      labels:
-        pod: cloudflared
-    spec:
-      securityContext:
-        sysctls:
-          - name: net.ipv4.ping_group_range
-            value: "65532 65532"
-      containers:
-        - command:
-            - cloudflared
-            - tunnel
-            - --no-autoupdate
-            # In a k8s environment, the metrics server needs to listen outside the pod it runs on.
-            # The address 0.0.0.0:2000 allows any pod in the namespace.
-            - --metrics
-            - 0.0.0.0:2000
-            - run
-          args:
-            - --token
-            - <token value>
-          image: cloudflare/cloudflared:latest
-          name: cloudflared
-          livenessProbe:
-            httpGet:
-              # Cloudflared has a /ready endpoint which returns 200 if and only if
-              # it has an active connection to the edge.
-              path: /ready
-              port: 2000
-            failureThreshold: 1
-            initialDelaySeconds: 10
-            periodSeconds: 10
-```
+	```yaml title="tunnel.yaml"
+	apiVersion: apps/v1
+	kind: Deployment
+	metadata:
+	name: cloudflared-deployment
+	namespace: default
+	spec:
+	replicas: 2
+	selector:
+		matchLabels:
+			pod: cloudflared
+	template:
+		metadata:
+			labels:
+				pod: cloudflared
+		spec:
+			securityContext:
+				sysctls:
+				# Allows ICMP traffic (ping, traceroute) to resources behind cloudflared.
+					- name: net.ipv4.ping_group_range
+						value: "65532 65532"
+			containers:
+				- image: cloudflare/cloudflared:latest
+					name: cloudflared
+					env:
+						- name: token_value
+							valueFrom:
+								secretKeyRef:
+									name: tunnel-token
+									key: token
+					command:
+					# Pay attention to the order of commands. For example, --loglevel, --no-autoupdate, and --metrics come before the "run" command, while --token comes after the "run" command.
+						- cloudflared
+						- tunnel
+						- --no-autoupdate
+						- --loglevel
+						- debug
+						- --metrics
+						- 0.0.0.0:2000
+						- run
+					args:
+						- --token
+						- $(token_value)
+					livenessProbe:
+						httpGet:
+							# Cloudflared has a /ready endpoint which returns 200 if and only if
+							# it has an active connection to Cloudflare's network.
+							path: /ready
+							port: 2000
+						failureThreshold: 1
+						initialDelaySeconds: 10
+						periodSeconds: 10
+	```
 
-This file will be deployed with the following command.
+2. Deploy `cloudflared` to the cluster:
 
-```sh
-kubectl create -f cloudflared-deployment.yml
-```
+	```sh
+	kubectl create -f tunnel.yaml
+	```
+
+	 Kubernetes will install the `cloudflared` image on two pods and run the tunnel using the command `cloudflared tunnel --no-autoupdate --loglevel debug --metrics 0.0.0.0:2000 run --token eyJhIjoiNWFiNGU5Z...`
+
+3. Check the status of your cluster:
+
+	```sh
+	kubectl get all
+	```
+
+	```sh output
+	NAME                                          READY   STATUS    RESTARTS   AGE
+	pod/cloudflared-deployment-6d5f9f9666-85l5w   1/1     Running   0          21s
+	pod/cloudflared-deployment-6d5f9f9666-wb96x   1/1     Running   0          21s
+	pod/httpbin-deployment-bc6689c5d-b5ftk        1/1     Running   0          3m36s
+	pod/httpbin-deployment-bc6689c5d-cbd9m        1/1     Running   0          3m36s
+
+	NAME                      TYPE           CLUSTER-IP       EXTERNAL-IP    PORT(S)        AGE
+	service/httpbin-service   LoadBalancer   34.118.225.147   34.75.201.60   80:31967/TCP   3m36s
+	service/kubernetes        ClusterIP      34.118.224.1     <none>         443/TCP        24h
+
+	NAME                                     READY   UP-TO-DATE   AVAILABLE   AGE
+	deployment.apps/cloudflared-deployment   2/2     2            2           22s
+	deployment.apps/httpbin-deployment       2/2     2            2           3m37s
+
+	NAME                                                DESIRED   CURRENT   READY   AGE
+	replicaset.apps/cloudflared-deployment-6d5f9f9666   2         2         2       22s
+	replicaset.apps/httpbin-deployment-bc6689c5d        2         2         2       3m37s
+	```
+
+You should see two `cloudflared` pods and two `httpbin` pods with a `Running` status. If your `cloudflared` pods keep restarting, make sure that your `cloudflared` [parameters](/cloudflare-one/connections/connect-networks/configure-tunnels/cloudflared-parameters/run-parameters/)  are in the correct position relative to the `run` command.
 
 ## Verify tunnel status
 
