@@ -1,0 +1,65 @@
+---
+title: Manage AI crawlers
+pcx_content_type: concept
+sidebar:
+  order: 2
+---
+
+import { Steps, GlossaryTooltip, Tabs, TabItem } from "~/components";
+
+AI Audit enables you to take specific action for each AI crawler.
+
+To manage AI crawlers:
+
+1. Log in to the [Cloudflare dashboard](https://dash.cloudflare.com/), and select your account and domain.
+2. Go to **AI Audit**.
+3. Go to the **AI Crawlers** tab.
+
+## View the list of AI crawlers
+
+The **AI Crawlers** tab displays a table of AI crawlers that are requesting access to your content, and how they interact with your pages. The table provides the following information, depending on the type of plan you are on.
+
+<Tabs>
+<TabItem label="Free plan">
+| Column                | Details                                                                                                                                                             |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AI Crawlers           | The name of the AI crawler.                                                                                                                                         |
+| Operator              | The name of the entity who owns the AI crawler. Note that an operator may have multiple AI crawlers.                                                                |
+| Category              | The category of the AI crawler. Refer to [Verified bot categories](/bots/concepts/bot/verified-bots/categories/).                                                   |
+| Block                 | Toggle for blocking specific AI crawlers.                                                                                                                           |
+
+</TabItem> <TabItem label="Paid plan">
+
+| Column                | Details                                                                                                                                                             |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AI Crawlers           | The name of the AI crawler.                                                                                                                                         |
+| Operator              | The name of the entity who owns the AI crawler. Note that an operator may have multiple AI crawlers.                                                                |
+| Category              | The category of the AI crawler. Refer to [Verified bot categories](/bots/concepts/bot/verified-bots/categories/).                                                   |
+| Requests              | The number of times the AI crawler has requested to crawl your content.                                                                                             |
+| Robots.txt violations | The number of times the AI crawler has violated your <GlossaryTooltip term="robots.txt">`robots.txt`</GlossaryTooltip> file.                                        |
+| Block                 | Toggle for blocking specific AI crawlers.                                                                                                                           |
+
+</TabItem>
+</Tabs>
+
+## Block access
+
+You can block an AI crawler to completely stop the AI crawler from scraping your webpage.
+
+## Filter AI crawler data
+
+You can use filters to narrow the scope of your result.
+
+- **Name:** Filter by the bot name by searching the name of the bot.
+- **Operator:** Filter by the AI crawler operator.
+- **Category:** Filter by the category of the AI bot (for example, AI crawler, AI assistant, or archiver).
+- **Date range:** Filter the date range of your results. You can choose from three predetermined date ranges:
+  - Past 7 days
+  - Past 14 days
+  - Past month
+
+The values of the AI Audit metrics will update according to your filter.
+
+## Related resources
+
+- Use [Pay per Crawl](/ai-audit/features/pay-per-crawl/what-is-pay-per-crawl/) to charge AI crawlers every time they access your content.

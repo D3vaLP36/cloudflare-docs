@@ -11,7 +11,7 @@ head:
 description: Learn how to set up AI Audit.
 ---
 
-import { Details, Render, Steps } from "~/components";
+import { Details, Render, Steps, Tabs, TabItem, GlossaryTooltip } from "~/components";
 
 This guide instructs you on how to:
 
@@ -26,61 +26,93 @@ This guide instructs you on how to:
 
 ## 1. Block all AI crawlers
 
-To use AI Audit:
+<Tabs>
+<TabItem label="All plans">
+To block all AI crawlers:
 
 {/* prettier-ignore */}
 <Steps>
 1. Log in to the [Cloudflare dashboard](https://dash.cloudflare.com/), and select your account and domain.
 2. Go to **AI Audit**.
-3. From **Most Popular Paths**, select **Block All**.
-4. From the **Bot traffic** page, under **Block AI Bots**, select **Enable**.
+3. Go to the **AI Crawlers** tab.
+4. From **Block AI Bots**, toggle the switch.
 </Steps>
 
-This feature also enables Cloudflare's [Bot Fight Mode: Block AI bots](/bots/get-started/bot-fight-mode/#block-ai-bots).
+This blocks all AI crawlers requesting access to your domain. You will also see all of the individual switches for bots automatically toggle to **Block**.
 
-You can also create more complex rules when taking action on AI crawlers. For more information on creating more specific rules, refer to [Create a custom rule in the dashboard
-](/waf/custom-rules/create-dashboard/).
+Note that blocking all AI crawlers using this method also enables Cloudflare's [Bot Fight Mode: Block AI bots](/bots/get-started/bot-fight-mode/#block-ai-bots).
 
 <Details header="Which bots will Cloudflare block?">
 	<Render file="list-ai-bots" product="bots" />
 </Details>
 
 :::note
-
 For more details on how this rule interacts with other Cloudflare settings, refer to [How it works](/bots/concepts/bot/#how-it-works).
-
 :::
+</TabItem>
+</Tabs>
 
-## 2. Block specific bot categories (Enterprise plan only)
+## 2. Block specific AI crawlers
 
-Customers on the Enterprise plan -- and with a [Bot Management subscription](/bots/plans/bm-subscription/) -- can choose to only block specific AI crawlers, while allowing others.
+<Tabs syncKey="plans">
+<TabItem label="Free plan">
+
+To only block specific AI crawlers:
 
 {/* prettier-ignore */}
 <Steps>
-1. Go to the **AI Audit**.
-2. From **Most Popular Paths**, select **Block Some**.
-3. From the **Security rules** page, select **Create rule** > **Custom rules**.
-4. Provide a name for the custom rule. For example, "Block unwanted AI crawlers".
-5. From the **Field** dropdown, select **Verified Bot Category**.
-6. From the **Value** dropdown, select the specific bot category you wish to block.
-   - You can use **And** / **Or** buttons to add additional conditions. For example, you can use multiple **Or** options to include multiple bot categories in the same rule.
-7. From the **Then take action...** section:
-   - For **Choose action**, select **Block**.
-   - For **With response type**, select **Default Cloudflare WAF block page**.
-8. From the **Place at** section:
-   - For **Select order**, select **First**.
-9. Select **Save**.
+1. Go to **AI Audit**.
+2. From **AI Crawlers** tab, go to the list of AI crawlers.
+3. Review the AI crawlers that are accessing your domain.
+4. From the **Block** column, toggle the switch for AI crawlers you with to block.
 </Steps>
 
-This custom rule will only block the AI bots which belong to the [verified bot categories](/bots/concepts/bot/verified-bots/categories/) you have included in your rule (in step 6).
+:::note[Quality of AI crawler detection]
+On the free plan, AI Audit identifies AI crawlers based on their [user agent strings](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/User-Agent). This enables AI Audit to detect easy-to-detect (well-known) AI crawlers.
 
-For more information on creating a custom WAF rule, refer to [Create a custom rule in the dashboard](/waf/custom-rules/create-dashboard/).
+Upgrade your plan to enable a more thorough detection using Cloudflare's [Bot Management detection ID](/bots/reference/bot-management-variables/#ruleset-engine-fields) field.
+:::
 
-## 3. Review detected AI crawlers
+</TabItem> <TabItem label="Paid plan">
 
-Review the AI crawlers detected on your site in the **Metrics** tab of the Cloudflare dashboard for key metrics.
+To only block specific AI crawlers:
 
-Refer to [Detect AI crawlers](/ai-audit/features/detect-ai-crawlers/) for more information.
+{/* prettier-ignore */}
+<Steps>
+1. Go to **AI Audit**.
+2. From **AI Crawlers** tab, go to the list of AI crawlers.
+3. Review key information such as:
+   - Bot operator
+   - Number of requests sent by the AI crawler
+   - Whether the bot is allowed according to your `robots.txt`, or the number of times the AI crawler has violated your `robots.txt`.
+4. From the **Block** column, toggle the switch for AI crawlers you with to block.
+</Steps>
+
+</TabItem>
+</Tabs>
+
+For more information, refer to [Manage AI crawlers](/ai-audit/features/manage-ai-crawlers/).
+
+You can also create more complex rules when taking action on AI crawlers, using [Cloudflare WAF](/waf/). For more information on creating more specific rules, refer to [Create a custom rule in the dashboard](/waf/custom-rules/create-dashboard/).
+
+## 3. Review detected AI crawlers (Enterprise plan only)
+
+<Tabs syncKey="plans">
+<TabItem label="Free plan">
+AI Audit metrics are only available on paid plans. Upgrade your plan to view key metrics on AI crawlers.
+
+</TabItem><TabItem label="Paid plan">
+
+Review the AI crawlers detected on your site.
+
+<Steps>
+1. Go to **AI Audit**.
+2. From the **Metrics** tab, view key metrics on AI crawlers.
+</Steps>
+</TabItem>
+</Tabs>
+
+Refer to [Detect AI crawlers](/ai-audit/features/detect-ai-crawlers/) for more information on AI Audit metrics.
 
 ## Related resources
 
