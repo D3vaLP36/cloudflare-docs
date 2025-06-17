@@ -47,7 +47,7 @@ To create a new Kubernetes cluster in Google Cloud:
 	4. Select **Authorize**.
 	5. Press Enter to run the pre-populated `gcloud` command.
 	6. (Recommended) In the Cloud Shell menu, select **Open Editor** to launch the built-in IDE.
-7. Run the following command to check the cluster status:
+7. In the Cloud Shell terminal, run the following command to check the cluster status:
 		```sh
 		kubectl get all
 		```
@@ -145,6 +145,8 @@ A pod represents an instance of a running process in the cluster. In this exampl
 
 ## 3. Create a tunnel
 
+To create a Cloudflare Tunnel:
+
 1. Open a new browser tab and log in to [Zero Trust](https://one.dash.cloudflare.com).
 
 2. Go to **Networks** > **Tunnels**.
@@ -153,7 +155,7 @@ A pod represents an instance of a running process in the cluster. In this exampl
 
 4. Choose **Cloudflared** for the connector type and select **Next**.
 
-5. Enter a name for your tunnel (for example, `gke`).
+5. Enter a name for your tunnel (for example, `gke-tunnel`).
 
 6. Select **Save tunnel**.
 
@@ -167,7 +169,7 @@ Leave the Cloudflare Tunnel browser tab open while we focus on the Kubernetes de
 
 ## 4. Store the tunnel token
 
-Create a [Kubernetes secret](https://kubernetes.io/docs/concepts/configuration/secret/) that contains the tunnel token. The tunnel token must be encoded as a base64-encoded string before it can be stored in the secret. The encoding is not meant to protect the token from being read but to allow for the safe handling of binary data within Kubernetes.
+`cloudflared` uses a tunnel token to run a remotely-managed Cloudflare Tunnel. You can store the tunnel token in a [Kubernetes secret](https://kubernetes.io/docs/concepts/configuration/secret/), which requires data to be encoded as a base64-encoded string. The encoding is not meant to protect the token from being read but to allow for the safe handling of binary data within Kubernetes.
 
 1. Convert the tunnel token into base64 format:
 
@@ -211,6 +213,8 @@ Create a [Kubernetes secret](https://kubernetes.io/docs/concepts/configuration/s
 
 ## 5. Create pods for cloudflared
 
+To run the Cloudflare Tunnel in Kubernetes:
+
 1. Create a Kubernetes deployment for a remotely-managed Cloudflare Tunnel:
 
 	```yaml title="tunnel.yaml"
@@ -244,7 +248,7 @@ Create a [Kubernetes secret](https://kubernetes.io/docs/concepts/configuration/s
 									name: tunnel-token
 									key: token
 					command:
-					# Pay attention to the order of commands. For example, --loglevel, --no-autoupdate, and --metrics come before the "run" command, while --token comes after the "run" command.
+					# Parameters must be in the correct order relative to the "run" command.
 						- cloudflared
 						- tunnel
 						- --no-autoupdate
@@ -301,7 +305,7 @@ Create a [Kubernetes secret](https://kubernetes.io/docs/concepts/configuration/s
 	replicaset.apps/httpbin-deployment-bc6689c5d        2         2         2       3m37s
 	```
 
-You should see two `cloudflared` pods and two `httpbin` pods with a `Running` status. If your `cloudflared` pods keep restarting, make sure that your `cloudflared` [parameters](/cloudflare-one/connections/connect-networks/configure-tunnels/cloudflared-parameters/run-parameters/)  are in the correct position relative to the `run` command.
+You should see two `cloudflared` pods and two `httpbin` pods with a `Running` status. If your `cloudflared` pods keep restarting, make sure that your `cloudflared` [run parameters](/cloudflare-one/connections/connect-networks/configure-tunnels/cloudflared-parameters/run-parameters/)  are in the correct order. In the example above, `--loglevel`, `--no-autoupdate`, and `--metrics` should come before the `run` command, while `--token` comes after the `run` command.
 
 ## 6. Verify tunnel status
 
@@ -322,19 +326,17 @@ kubectl logs pod/cloudflared-deployment-6d5f9f9666-85l5w
 ...
 ```
 
-You can also verify the connection status in the Zero Trust dashboard.
-
 ## 7. Add a tunnel route
 
 Now that the tunnel is up and running, we can use the Zero Trust dashboard to route the httpbin service through the tunnel.
 
 1. Switch to the browser tab where you were configuring Cloudflare Tunnel.
 
-2. Go to the **Route tunnel** step and select the **Public hostnames** tab.
+2. Go to the **Route tunnel** step.
 
-3. Enter a hostname for the application (for example, `httpbin.<your-domain>.com`).
+3. In the **Public hostnames** tab, enter a hostname for the application (for example, `httpbin.<your-domain>.com`).
 
-4. Under **Service**, enter `http://httpbin-service`
+4. Under **Service**, enter `http://httpbin-service`. `httpbin-service` is the name of the Kubernetes service defined in `httpbinsvc.yaml`.
 
 5. Select **Complete setup**.
 
