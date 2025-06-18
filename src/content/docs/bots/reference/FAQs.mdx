@@ -1,0 +1,55 @@
+---
+pcx_content_type: reference
+title: FAQs
+sidebar:
+  order: 99
+
+---
+
+import { AvailableNotifications } from "~/components"
+
+## Web Bot Auth FAQs
+
+Also refer to [Web Both Auth](/bots/concepts/bot/verified-bots/web-bot-auth/).
+
+### What key algorithms does Cloudflare support?
+
+Cloudflare does not support key algorithms other than ed25519 .
+
+### What `web-bot-auth` features from the spec are not supported?
+
+The following derived components are not supported, and we will fail to verify a message if they are included:
+
+- `@query-params`: Cloudflare recommends signing the whole query instead of an individual parameter.
+- `@status`: This is not possible to include in the request path.
+
+The following component parameters defined in IETF RFC 9421 are not supported, and Cloudflare will fail to verify a message if they are included:
+
+- `sf` (for HTTP header fields)
+- `bs` (for HTTP header fields)
+- `key` (for HTTP header fields)
+- `req` (for HTTP header fields or derived components)
+- `name` (for `@query-param` support - this requires `@query-param` support)
+
+### Should I supply a `nonce` parameter in `Signature-Input`?
+
+The `nonce` parameter allows you to supply a `nonce` to prevent attackers from replaying past messages against a server.
+
+While Cloudflare recommends including it, currently there is no `nonce` validation, nor does Cloudflare guard against replay attacks using a database of seen `nonces`.
+
+Instead, Cloudflare recommends short `expires` as a protection against replay attacks. A minute is often sufficient.
+
+### How do I know my JSON Web Key set directory will be accepted?
+
+Cloudflare uses [`http-signature-directory` tool](https://crates.io/crates/http-signature-directory) to validate your directory. Please your this works before submitting a verification request.
+
+### My message is failing validation. What could be the cause?
+
+- Ensure you have a [`Signature-Agent` header](/bots/concepts/bot/verified-bots/web-bot-auth/#signature-agent-header), and that its value in double-quotes.
+- Ensure you include `signature-agent` in the component list in your [`Signature-Input` header](/bots/concepts/bot/verified-bots/web-bot-auth/#signature-agent-header).
+- Ensure your `expires` timestamp is not too short, such that, by the time it arrives at Cloudflare servers, it has already expired. A minute is often sufficient.
+- Ensure you are not signing components containing non-ASCII values, or on the unsupported list.
+
+### I want to use HTTP message signatures / Web Bot Auth on my zone, and do not want Cloudflare's verification to intervene. What do I do?
+
+You can request the Web Bot Auth feature be disabled for your zone by contacting Cloudflare support. This will disable usage of Web Bot Auth specifically with Cloudflare, and verified bots will fallback to other modes to validate traffic.
