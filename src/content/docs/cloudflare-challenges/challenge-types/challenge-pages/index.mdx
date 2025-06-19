@@ -16,20 +16,19 @@ The level of interactivity and visibility of the Challenge Page depends on the A
 
 ## Actions
 
-The following Challenge types are the available Actions when you create a WAF rule for a Challenge Page. 
+The following Challenge types are the available actions when you create a WAF rule for a Challenge Page. 
 
 ### Managed Challenge (recommended)
 
 Managed Challenges are where Cloudflare dynamically chooses the appropriate type of challenge served to the visitor based on the characteristics of a request from the signals indicated by their browser. This helps avoid [CAPTCHAs](https://www.cloudflare.com/learning/bots/how-captchas-work/), which also reduces the lifetimes of human time spent solving CAPTCHAs across the Internet.
 
-Most human visitors are automatically verified and will see Successful on the Challenge Page. However, if Cloudflare detects non-human attributes from the visitor’s browser, they may be required to interact with the Challenge to solve it.
+Most human visitors are automatically verified and will see **Successful** on the Challenge Page. However, if Cloudflare detects non-human attributes from the visitor's browser, they may be required to interact with the Challenge to solve it.
 
 Unless there are specific compatibility issues or other reasons to use other types of Challenges, Cloudflare recommends you to use Managed Challenges for your custom rules.
 
 :::caution
 Using Cloudflare Challenges along with Rules features may cause Challenge loops. Refer to [Rules troubleshooting](/rules/reference/troubleshooting/) for more information.
 :::
-
 
 ### Interactive Challenge
 
