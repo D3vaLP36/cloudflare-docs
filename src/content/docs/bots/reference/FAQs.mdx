@@ -6,15 +6,14 @@ sidebar:
 
 ---
 
-import { AvailableNotifications } from "~/components"
 
 ## Web Bot Auth FAQs
 
-Also refer to [Web Both Auth](/bots/concepts/bot/verified-bots/web-bot-auth/).
+You may also refer to [Web Both Auth](/bots/concepts/bot/verified-bots/web-bot-auth/) documentation.
 
 ### What key algorithms does Cloudflare support?
 
-Cloudflare does not support key algorithms other than ed25519 .
+Cloudflare does not support key algorithms other than Ed25519.
 
 ### What `web-bot-auth` features from the spec are not supported?
 
@@ -35,7 +34,7 @@ The following component parameters defined in IETF RFC 9421 are not supported, a
 
 The `nonce` parameter allows you to supply a `nonce` to prevent attackers from replaying past messages against a server.
 
-While Cloudflare recommends including it, currently there is no `nonce` validation, nor does Cloudflare guard against replay attacks using a database of seen `nonces`.
+While Cloudflare recommends including it, there is currently no `nonce` validation, nor does Cloudflare guard against replay attacks using a database of seen `nonces`.
 
 Instead, Cloudflare recommends short `expires` as a protection against replay attacks. A minute is often sufficient.
 
