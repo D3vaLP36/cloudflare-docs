@@ -4,13 +4,13 @@ title: Interstitial Challenge Pages
 sidebar:
   order: 1
 ---
-
+import { Render } from "~/components"
 
 An interstitial Challenge Page acts as a gate between the visitor and your website or application while Cloudflare verifies the authenticity of the visitor.
 
 The Challenge Page intercepts the visitor from getting to the destination URL by holding the request and evaluating the browser environment for automated signals, and serving a Challenge. The visitor cannot reach their destination without passing the Challenge. Based on the signals indicated by their browser environment, the visitor may be asked to perform an interaction such as checking a box or selecting a button for further probing.
 
-You can implement a Challenge Page to your website or application via WAF custom rules. Challenges are triggered by a rule in the [Web Application Firewall (WAF)](/waf/), [Bot Management](/bots/), or [Rate limiting](/waf/rate-limiting-rules/). 
+<Render file="create-challenge-page" />
 
 The level of interactivity and visibility of the Challenge Page depends on the Action that you select when creating the WAF rule for your website or application.
 
@@ -44,5 +44,3 @@ With a JavaScript (JS) Challenge, Cloudflare makes the determination on whether 
 The visitor must wait until their browser finishes processing the JavaScript, which typically takes less than five seconds.
 
 If the visitor passes the Challenge, the original request continues to the destination URL. If the Challenge fails or cannot be completed, the visitor is presented with another interstitial Challenge page.
-
-For information on how non-interactive JavaScript Challenges differ from JavaScript detections, refer to our [FAQ](/cloudflare-challenges/frequently-asked-questions/).
