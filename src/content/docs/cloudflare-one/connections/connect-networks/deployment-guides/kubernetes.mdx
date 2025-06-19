@@ -242,13 +242,14 @@ To run the Cloudflare Tunnel in Kubernetes:
 				- image: cloudflare/cloudflared:latest
 					name: cloudflared
 					env:
-						- name: token_value
+						# Defines an environment variable for the tunnel token.
+						- name: TUNNEL_TOKEN
 							valueFrom:
 								secretKeyRef:
 									name: tunnel-token
 									key: token
 					command:
-					# Parameters must be in the correct order relative to the "run" command.
+					  # Configures tunnel run parameters
 						- cloudflared
 						- tunnel
 						- --no-autoupdate
@@ -257,9 +258,6 @@ To run the Cloudflare Tunnel in Kubernetes:
 						- --metrics
 						- 0.0.0.0:2000
 						- run
-					args:
-						- --token
-						- $(token_value)
 					livenessProbe:
 						httpGet:
 							# Cloudflared has a /ready endpoint which returns 200 if and only if
@@ -277,7 +275,7 @@ To run the Cloudflare Tunnel in Kubernetes:
 	kubectl create -f tunnel.yaml
 	```
 
-	 Kubernetes will install the `cloudflared` image on two pods and run the tunnel using the command `cloudflared tunnel --no-autoupdate --loglevel debug --metrics 0.0.0.0:2000 run --token eyJhIjoiNWFiNGU5Z...`
+	 Kubernetes will install the `cloudflared` image on two pods and run the tunnel using the command `cloudflared tunnel --no-autoupdate --loglevel debug --metrics 0.0.0.0:2000 run`. `cloudflared` will consume the tunnel token from the `TUNNEL_TOKEN` environment variable.
 
 3. Check the status of your cluster:
 
@@ -305,7 +303,7 @@ To run the Cloudflare Tunnel in Kubernetes:
 	replicaset.apps/httpbin-deployment-bc6689c5d        2         2         2       3m37s
 	```
 
-You should see two `cloudflared` pods and two `httpbin` pods with a `Running` status. If your `cloudflared` pods keep restarting, make sure that your `cloudflared` [run parameters](/cloudflare-one/connections/connect-networks/configure-tunnels/cloudflared-parameters/run-parameters/)  are in the correct order. In the example above, `--loglevel`, `--no-autoupdate`, and `--metrics` should come before the `run` command, while `--token` comes after the `run` command.
+You should see two `cloudflared` pods and two `httpbin` pods with a `Running` status. If your `cloudflared` pods keep restarting, check the `command` syntax in `tunnel.yaml` and make sure that the [tunnel run parameters](/cloudflare-one/connections/connect-networks/configure-tunnels/cloudflared-parameters/run-parameters/)  are in the correct order.
 
 ## 6. Verify tunnel status
 
