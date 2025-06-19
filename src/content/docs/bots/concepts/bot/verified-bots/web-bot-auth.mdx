@@ -48,9 +48,17 @@ You need to host a key directory which creates a way for Cloudflare to authentic
    /.well-known/http-message-signatures-directory/
    ```
 2. Serve the web page over HTTPS (not HTTP).
-3. Sign your HTTP response using the HTTP message signature specification by attaching one signature per key in your key directory. This ensures no one else can mirror your directory and attempt to register on your behalf. Your response must include the following headers:
-   - `Signature`: TBD
-   - `Signature-Input`: TBD
+3. [Calculate the base64 URL-encoded JWK thumbprint](https://www.rfc-editor.org/rfc/rfc8037.html#appendix-A.3) associated with your Ed25519 public key.
+4. Sign your HTTP response using the HTTP message signature specification by attaching one signature per key in your key directory. This ensures no one else can mirror your directory and attempt to register on your behalf. Your response must include the following headers:
+   - `Signature`: Construct a [`Signature` header](https://www.rfc-editor.org/rfc/rfc9421#name-the-signature-http-field) over your chosen components.
+   - `Signature-Input`: Construct a [`Signature-Input` header](https://www.rfc-editor.org/rfc/rfc9421#name-the-signature-input-http-fi) over your chosen components. The header must meet the following requirements.
+     | Required component parameter | Requirement                                                                                                                 |
+     | ---------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+     | `tag`                        | This should be equal to `http-message-signatures-directory`.                                                                |
+     | `alg`                        | This should be equal to `ed25519`.                                                                                          |
+     | `keyid`                      | JWK thumbprint of the corresponding key in your directory.                                                                  |
+     | `created`                    | This should be equal to a `Unix` timestamp associated with when the message was sent by your application.                   |
+     | `expires`                    | This should be equal to a `Unix` timestamp associated with when Cloudflare should no longer attempt to verify the message.  |
 
    The following example shows the annotated request and response with required headers against `https://example.com`.
    ```txt
@@ -172,7 +180,7 @@ Signature: sig2=:jdq0SqOwHdyHr9+r5jw3iYZH6aNGKijYp/EstF4RQTQdi5N5YYKrD+mCT1HA1nZ
 
 You may wish to refer to the following resources.
 
-- [Bots FAQs](/bots/reference/faqs/).
+- [Bots FAQs](/bots/frequently-asked-questions/).
 - Link to new blog TBC.
 - Cloudflare blog: [Forget IPs: using cryptography to verify bot and agent traffic](https://blog.cloudflare.com/web-bot-auth/).
 - Cloudflare's [`web-bot-auth` library in Rust](https://crates.io/crates/web-bot-auth).
