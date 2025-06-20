@@ -1,0 +1,23 @@
+---
+title: Run and connect Workers in separate dev sessions with the Cloudflare Vite plugin
+description: Workers running in separate dev sessions can now communicate with each other using the Cloudflare Vite plugin.
+products:
+  - workers
+date: 2025-06-25T18:00:00Z
+---
+
+Workers can now talk to each other across separate dev sessions using service bindings and tail consumers, whether started with `vite dev` or `wrangler dev`.
+
+Simply start each Worker in its own terminal:
+
+```sh
+# Terminal 1
+vite dev
+
+# Terminal 2  
+wrangler dev
+```
+
+This is useful when different teams maintain different Workers, or when each Worker uses different build configurations.
+
+Check out the [Multi Workers development guide](/workers/development-testing/multi-workers) to learn more about the different approaches and when to use each one.
